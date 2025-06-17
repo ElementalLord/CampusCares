@@ -1,0 +1,1417 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+   <meta charset="UTF-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <title>Campus Cares - Turning Extra Into Enough</title>
+   <script src="https://cdn.tailwindcss.com"></script>
+   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+   <style>
+       :root {
+           --maroon: #800020;
+           --maroon-light: #a83232;
+           --maroon-dark: #500012;
+           --dark-red: #8B0000;
+           --red: #FF0000;
+           --light-red: #FF6B6B;
+           --rediish: #d10c48
+       }
+      
+       body {
+           font-family: 'Poppins', sans-serif;
+           background-color: #570612;
+           overflow-x: hidden;
+           cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="%23800020"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/></svg>'), auto;
+       }
+      
+       .heading-font {
+           font-family: 'Playfair Display', serif;
+       }
+      
+       .subheading-font {
+           font-family: 'Montserrat', sans-serif;
+       }
+      
+       .maroon-text {
+           color: var(--maroon);
+       }
+      
+       .maroon-bg {
+           background-color: var(--maroon);
+       }
+      
+       .dark-red-text {
+           color: var(--dark-red);
+       }
+      
+       .dark-red-bg {
+           background-color: var(--dark-red);
+       }
+      
+       .red-text {
+           color: var(--red);
+       }
+      
+       .red-bg {
+           background-color: var(--red);
+       }
+      
+       .light-red-text {
+           color: var(--light-red);
+       }
+      
+       .light-red-bg {
+           background-color: var(--light-red);
+       }
+      
+       .stats-card {
+           transition: all 0.3s ease;
+           opacity: 0;
+           transform: translateY(20px);
+       }
+      
+       .stats-card.animated {
+           opacity: 1;
+           transform: translateY(0);
+       }
+      
+       .stats-card:hover {
+           transform: translateY(-5px) scale(1.02) !important;
+           box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+       }
+      
+       .organization-card {
+           transition: all 0.3s ease;
+           opacity: 0;
+           transform: translateY(20px);
+       }
+      
+       .organization-card.animated {
+           opacity: 1;
+           transform: translateY(0);
+       }
+      
+       .organization-card:hover {
+           transform: scale(1.03) !important;
+           box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+       }
+      
+       .nav-link {
+           position: relative;
+       }
+      
+       .nav-link::after {
+           content: '';
+           position: absolute;
+           width: 0;
+           height: 3px;
+           bottom: 0;
+           left: 0;
+           background-color: var(--maroon);
+           transition: width 0.3s ease;
+       }
+      
+       .nav-link:hover::after {
+           width: 100%;
+       }
+      
+       #president-card {
+           transition: all 0.3s ease;
+           opacity: 0;
+           transform: rotate(-5deg);
+       }
+      
+       #president-card.animated {
+           opacity: 1;
+           transform: rotate(0deg);
+       }
+      
+       #president-card:hover {
+           transform: rotate(-2deg) scale(1.02) !important;
+           box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+       }
+      
+       .floating {
+           animation: floating 3s ease-in-out infinite;
+       }
+      
+       @keyframes floating {
+           0% { transform: translateY(0px); }
+           50% { transform: translateY(-10px); }
+           100% { transform: translateY(0px); }
+       }
+      
+       .pulse {
+           animation: pulse 2s infinite;
+       }
+      
+       @keyframes pulse {
+           0% { transform: scale(1); }
+           50% { transform: scale(1.05); }
+           100% { transform: scale(1); }
+       }
+      
+       .bounce {
+           animation: bounce 2s infinite;
+       }
+      
+       @keyframes bounce {
+           0%, 20%, 50%, 80%, 100% {transform: translateY(0);}
+           40% {transform: translateY(-20px);}
+           60% {transform: translateY(-10px);}
+       }
+      
+       .rotate {
+           animation: rotate 10s linear infinite;
+       }
+      
+       @keyframes rotate {
+           0% { transform: rotate(0deg); }
+           100% { transform: rotate(360deg); }
+       }
+      
+       .contrib-modal {
+           display: none;
+           position: fixed;
+           top: 0;
+           left: 0;
+           width: 100%;
+           height: 100%;
+           background-color: rgba(0,0,0,0.7);
+           z-index: 1000;
+           justify-content: center;
+           align-items: center;
+       }
+      
+       .contrib-content {
+           background: white;
+           padding: 2rem;
+           border-radius: 15px;
+           max-width: 500px;
+           width: 90%;
+           position: relative;
+           animation: modalFadeIn 0.3s;
+       }
+      
+       @keyframes modalFadeIn {
+           from { opacity: 0; transform: translateY(-50px); }
+           to { opacity: 1; transform: translateY(0); }
+       }
+      
+       .close-modal {
+           position: absolute;
+           top: 10px;
+           right: 15px;
+           font-size: 1.5rem;
+           cursor: pointer;
+           color: var(--maroon);
+       }
+      
+       .food-icon {
+           position: absolute;
+           opacity: 0;
+           font-size: 1.5rem;
+           color: var(--maroon);
+       }
+      
+       .cougar-head {
+           position: relative;
+           width: 80px;
+           height: 80px;
+       }
+      
+       .cougar-head::before {
+           content: '';
+           position: absolute;
+           width: 100%;
+           height: 100%;
+           background-color: var(--maroon);
+           border-radius: 50%;
+           z-index: -1;
+       }
+      
+       .cougar-head i {
+           color: var(--light-red);
+           font-size: 2.5rem;
+       }
+      
+       .color-transition {
+           transition: background-color 0.5s ease, color 0.5s ease;
+       }
+      
+       .food-bg {
+           position: absolute;
+           width: 100%;
+           height: 100%;
+           top: 0;
+           left: 0;
+           z-index: -1;
+           opacity: 0.1;
+           overflow: hidden;
+       }
+      
+       .food-bg-item {
+           position: absolute;
+           font-size: 1.5rem;
+           opacity: 0.6;
+           animation: floatFood 15s linear infinite;
+       }
+      
+       @keyframes floatFood {
+           0% {
+               transform: translateY(100vh) translateX(0);
+           }
+           100% {
+               transform: translateY(-100px) translateX(100px);
+           }
+       }
+      
+       .confetti-btn {
+           background: linear-gradient(45deg, var(--maroon), var(--dark-red), var(--red), var(--light-red));
+           background-size: 300% 300%;
+           animation: gradient 8s ease infinite;
+       }
+      
+       @keyframes gradient {
+           0% { background-position: 0% 50%; }
+           50% { background-position: 100% 50%; }
+           100% { background-position: 0% 50%; }
+       }
+      
+       .text-gradient {
+           background: linear-gradient(45deg, var(--maroon), var(--dark-red), var(--red));
+           -webkit-background-clip: text;
+           background-clip: text;
+           color: transparent;
+           background-size: 300% 300%;
+           animation: gradient 8s ease infinite;
+       }
+      
+       .floating-food {
+           position: fixed;
+           pointer-events: none;
+           z-index: 999;
+           transition: transform 0.2s ease-out;
+       }
+      
+       .quick-link-btn {
+           transition: all 0.3s ease;
+           transform: perspective(500px) rotateX(0deg);
+       }
+      
+       .quick-link-btn:hover {
+           transform: perspective(500px) rotateX(20deg);
+           box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+       }
+      
+       .interactive-card {
+           transition: all 0.3s ease;
+           transform: perspective(1000px) rotateY(0deg) rotateX(0deg);
+       }
+      
+       .interactive-card:hover {
+           transform: perspective(1000px) rotateY(5deg) rotateX(5deg);
+           box-shadow: 0 20px 30px rgba(0,0,0,0.2);
+       }
+      
+       .cursor-effect {
+           position: fixed;
+           width: 20px;
+           height: 20px;
+           border-radius: 50%;
+           background-color: rgba(139, 0, 0, 0.5);
+           pointer-events: none;
+           z-index: 9999;
+           transform: translate(-50%, -50%);
+           transition: transform 0.1s ease, width 0.3s ease, height 0.3s ease;
+       }
+      
+       .ripple {
+           position: absolute;
+           border-radius: 50%;
+           background-color: rgba(139, 0, 0, 0.3);
+           transform: scale(0);
+           animation: ripple 1s linear;
+           pointer-events: none;
+       }
+      
+       @keyframes ripple {
+           to {
+               transform: scale(4);
+               opacity: 0;
+           }
+       }
+      
+       .cougar-popup {
+           position: fixed;
+           bottom: 20px;
+           right: 20px;
+           background-color: var(--maroon);
+           color: white;
+           padding: 15px 25px;
+           border-radius: 10px;
+           box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+           z-index: 10000;
+           transform: translateY(100px);
+           opacity: 0;
+           transition: all 0.5s ease;
+       }
+      
+       .cougar-popup.show {
+           transform: translateY(0);
+           opacity: 1;
+       }
+   </style>
+</head>
+<body>
+   <!-- Custom cursor effect -->
+   <div class="cursor-effect" id="cursor"></div>
+   
+   <!-- Floating food background -->
+   <div class="food-bg" id="foodBackground"></div>
+  
+   <!-- Floating food icons -->
+   <div id="floating-food"></div>
+  
+   <!-- "Go Cougars!" Popup -->
+   <div class="cougar-popup" id="cougarPopup">
+       <div class="flex items-center">
+           <i class="fas fa-paw mr-3 text-xl"></i>
+           <span class="font-bold">Go Cougars!</span>
+       </div>
+   </div>
+  
+   <!-- Contribution Modal -->
+   <div class="contrib-modal" id="contribModal">
+       <div class="contrib-content relative">
+           <span class="close-modal" id="closeModal">&times;</span>
+           <h3 class="text-xl font-bold maroon-text mb-4">Join Campus Cares!</h3>
+           <p class="mb-4">Contact our president Naitik to get involved:</p>
+           <div class="bg-gray-100 p-4 rounded-lg mb-4">
+               <p class="font-semibold"><i class="fas fa-user mr-2 maroon-text"></i> Naitik, President</p>
+               <p class="mt-2"><i class="fas fa-envelope mr-2 maroon-text"></i> naitik.s.patel10@gmail.com</p>
+               <p class="mt-2"><i class="fas fa-phone mr-2 maroon-text"></i> (669) 264-9219</p>
+               <p class="mt-2"><i class="fas fa-school mr-2 maroon-text"></i> LGI during Cougar Time</p>
+           </div>
+           <p>Or attend our weekly meetings:</p>
+           <p class="font-semibold mt-2"><i class="fas fa-calendar-alt maroon-text mr-2"></i> Every Wednesday</p>
+           <p><i class="fas fa-clock maroon-text mr-2"></i> During Cougar Time</p>
+           <p><i class="fas fa-map-marker-alt maroon-text mr-2"></i> LGI</p>
+           <button class="mt-6 px-6 py-2 dark-red-bg text-white rounded hover:bg-maroon-dark transition w-full confetti-btn" id="confirmJoin">
+               I'll Be There!
+           </button>
+       </div>
+   </div>
+
+   <!-- Header with Navigation -->
+   <header class="maroon-bg text-white sticky top-0 z-50 shadow-lg">
+       <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+           <div class="flex items-center space-x-2">
+               <div class="cougar-head flex items-center justify-center bounce">
+                   <i class="fas fa-utensils"></i>
+               </div>
+               <h1 class="text-2xl font-bold heading-font">
+                   <span class="-text">Campus</span>
+                   <span class="text-white">Cares</span>
+               </h1>
+           </div>
+           <nav class="hidden md:flex space-x-8">
+               <a href="#home" class="nav-link py-2">Home</a>
+               <a href="#mission" class="nav-link py-2">Our Mission</a>
+               <a href="#stats" class="nav-link py-2">Food Stats</a>
+               <a href="#partners" class="nav-link py-2">Partners</a>
+               <a href="#about" class="nav-link py-2">About Us</a>
+               <a href="#contact" class="nav-link py-2">Contact</a>
+               <button id="contribButton" class="px-4 py-1 red-bg text-white font-bold rounded-full hover:bg-maroon-dark transition pulse">
+                   Join Us!
+               </button>
+           </nav>
+           <button class="md:hidden text-2xl" id="mobile-menu-button">
+               <i class="fas fa-bars"></i>
+           </button>
+       </div>
+      
+       <!-- Mobile Menu -->
+       <div class="md:hidden hidden maroon-bg w-full py-4 px-4" id="mobile-menu">
+           <div class="flex flex-col space-y-4">
+               <a href="#home" class="nav-link py-2">Home</a>
+               <a href="#mission" class="nav-link py-2">Our Mission</a>
+               <a href="#stats" class="nav-link py-2">Food Stats</a>
+               <a href="#partners" class="nav-link py-2">Partners</a>
+               <a href="#about" class="nav-link py-2">About Us</a>
+               <a href="#contact" class="nav-link py-2">Contact</a>
+               <button id="contribButtonMobile" class="w-full py-2 dark-red-bg text-white font-bold rounded hover:bg-maroon-dark transition">
+                   Join Us!
+               </button>
+           </div>
+       </div>
+   </header>
+
+   <!-- Quick Links Section -->
+   <section class="bg-gradient-to-b from-dark-red to-maroon py-4">
+       <div class="container mx-auto px-4">
+           <div class="flex flex-wrap justify-center gap-4">
+               <a href="#home" class="quick-link-btn px-4 py-2 bg-white text-maroon rounded-full shadow-md hover:bg-gray-100">
+                   <i class="fas fa-home mr-2"></i> Home
+               </a>
+               <a href="#mission" class="quick-link-btn px-4 py-2 bg-white text-maroon rounded-full shadow-md hover:bg-gray-100">
+                   <i class="fas fa-bullseye mr-2"></i> Mission
+               </a>
+               <a href="#stats" class="quick-link-btn px-4 py-2 bg-white text-maroon rounded-full shadow-md hover:bg-gray-100">
+                   <i class="fas fa-chart-bar mr-2"></i> Stats
+               </a>
+               <a href="#partners" class="quick-link-btn px-4 py-2 bg-white text-maroon rounded-full shadow-md hover:bg-gray-100">
+                   <i class="fas fa-handshake mr-2"></i> Partners
+               </a>
+               <a href="#contact" class="quick-link-btn px-4 py-2 bg-white text-maroon rounded-full shadow-md hover:bg-gray-100">
+                   <i class="fas fa-envelope mr-2"></i> Contact
+               </a>
+               <a href="https://www.instagram.com/nytro8382" target="_blank" class="quick-link-btn px-4 py-2 bg-white text-maroon rounded-full shadow-md hover:bg-gray-100">
+                   <i class="fab fa-instagram mr-2"></i> Instagram
+               </a>
+                <a href="https://mail.google.com/mail/?view=cm&fs=1&to=naitik.s.patel10@gmail.com&su=Join%20Campus%20Cares&body=Hi%20Naitik%2C%0A%0AI%27m%20interested%20in%20joining%20Campus%20Cares.%20Please%20let%20me%20know%20how%20I%20can%20get%20involved.%0A%0AThanks!" target="_blank" class="quick-link-btn px-4 py-2 bg-white text-maroon rounded-full shadow-md hover:bg-gray-100">
+                    <i class="fas fa-envelope mr-2"></i> Email
+               </a>
+           </div>
+       </div>
+   </section>
+
+   <!-- Hero Section -->
+   <section id="home" class="relative overflow-hidden min-h-screen flex items-center">
+       <div class="absolute inset-0 bg-black opacity-40"></div>
+       <div class="absolute inset-0 bg-gradient-to-r from-maroon-dark to-maroon-light opacity-90"></div>
+       <div class="container mx-auto px-4 py-24 md:py-32 relative z-10 text-center">
+           <div class="max-w-4xl mx-auto">
+               <h1 class="text-5xl md:text-7xl font-bold mb-6 heading-font">
+                   <span class="text-white">Campus</span> <span class="dark-red-text">Cares</span>
+               </h1>
+               <h2 class="text-3xl md:text-4xl font-semibold text-white mb-8 subheading-font">
+                   Turning <span class="dark-red-text">Extra</span> Into <span class="dark-red-text">Enough</span>
+               </h2>
+               <p class="text-xl text-white mb-10 max-w-2xl mx-auto">
+                   A Cinco Ranch High School Initiative to Reduce Food Waste and Fight Hunger
+               </p>
+               <div class="flex flex-col md:flex-row justify-center space-y-4 md:space-y-0 md:space-x-6">
+                   <a href="#mission" class="px-8 py-3 dark-red-bg hover:bg-maroon-dark text-white font-bold rounded-full transition duration-300 transform hover:scale-105 interactive-card">
+                       Learn More
+                   </a>
+                   <a href="#contact" class="px-8 py-3 border-2 border-white hover:bg-white hover:text-maroon text-white font-bold rounded-full transition duration-300 transform hover:scale-105 interactive-card">
+                       Get Involved
+                   </a>
+               </div>
+           </div>
+       </div>
+      
+       <!-- Animated floating elements -->
+       <div class="absolute top-1/4 left-1/6 w-16 h-16 rounded-full dark-red-bg opacity-20 floating" style="animation-delay: 0s;"></div>
+       <div class="absolute top-1/3 right-1/5 w-24 h-24 rounded-full red-bg opacity-20 floating" style="animation-delay: 0.5s;"></div>
+       <div class="absolute bottom-1/4 left-1/4 w-20 h-20 rounded-full maroon-bg opacity-20 floating" style="animation-delay: 1s;"></div>
+       <div class="absolute bottom-1/3 right-1/6 w-16 h-16 rounded-full dark-red-bg opacity-20 floating" style="animation-delay: 1.5s;"></div>
+   </section>
+
+   <!-- Mission Section -->
+   <section id="mission" class="py-16 bg-gradient-to-b from-gray-50 to-gray-100">
+       <div class="container mx-auto px-4">
+           <div class="text-center mb-12">
+               <h2 class="text-3xl md:text-4xl font-bold maroon-text mb-4 heading-font">Our Mission</h2>
+               <div class="w-24 h-1 bg-gradient-to-r from-maroon-light to-maroon-dark mx-auto mb-6"></div>
+               <p class="text-lg text-gray-600 max-w-3xl mx-auto subheading-font">
+                   We collect excess food from the Cinco Ranch High School cafeteria and distribute it to local shelters, food banks, and those in need in our community.
+               </p>
+           </div>
+          
+           <div class="grid md:grid-cols-3 gap-8">
+               <div class="interactive-card bg-white p-8 rounded-lg shadow-md text-center hover:bg-gray-50 transition color-transition">
+                   <div class="maroon-text text-4xl mb-4">
+                       <i class="fas fa-utensils rotate" style="animation-duration: 8s;"></i>
+                   </div>
+                   <h3 class="text-xl font-bold maroon-text mb-3 subheading-font">Collect</h3>
+                   <p class="text-gray-600">
+                       We gather untouched, excess food from our school cafeteria that would otherwise go to waste.
+                   </p>
+               </div>
+              
+               <div class="interactive-card bg-white p-8 rounded-lg shadow-md text-center hover:bg-gray-50 transition color-transition">
+                   <div class="dark-red-text text-4xl mb-4">
+                       <i class="fas fa-heart" style="animation: pulse 1.5s infinite;"></i>
+                   </div>
+                   <h3 class="text-xl font-bold dark-red-text mb-3 subheading-font">Distribute</h3>
+                   <p class="text-gray-600">
+                       We partner with local organizations to get this food to those who need it most in our community.
+                   </p>
+               </div>
+              
+               <div class="interactive-card bg-white p-8 rounded-lg shadow-md text-center hover:bg-gray-50 transition color-transition">
+                   <div class="red-text text-4xl mb-4">
+                       <i class="fas fa-seedling floating" style="animation-duration: 4s;"></i>
+                   </div>
+                   <h3 class="text-xl font-bold dark-red-text mb-3 subheading-font">Educate</h3>
+                   <p class="text-gray-600">
+                       We raise awareness about food waste and hunger issues, inspiring others to take action.
+                   </p>
+               </div>
+           </div>
+       </div>
+   </section>
+
+   <!-- Food Statistics Section -->
+   <section id="stats" class="py-16 bg-gradient-to-b from-white to-gray-50">
+       <div class="container mx-auto px-4">
+           <div class="text-center mb-12">
+               <h2 class="text-3xl md:text-4xl font-bold maroon-text mb-4 heading-font">Food Statistics</h2>
+               <div class="w-24 h-1 bg-gradient-to-r from-maroon-light to-maroon-dark mx-auto mb-6"></div>
+               <p class="text-lg text-gray-600 max-w-3xl mx-auto subheading-font">
+                   Track our impact and see how much food we've saved from waste and donated to those in need.
+               </p>
+           </div>
+          
+           <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+               <div class="stats-card bg-gradient-to-br from-gray-50 to-gray-100 p-6 rounded-lg shadow-lg text-center border-l-4 border-maroon-dark">
+                   <div class="text-4xl font-bold maroon-text mb-2" id="total-meals">2,480</div>
+                   <div class="text-gray-600">Meals Saved</div>
+                   <i class="fas fa-hamburger food-icon" style="top: -10px; left: 20px;"></i>
+                   <i class="fas fa-apple-alt food-icon" style="bottom: -10px; right: 20px;"></i>
+               </div>
+              
+               <div class="stats-card bg-gradient-to-br from-gray-50 to-gray-100 p-6 rounded-lg shadow-lg text-center border-l-4 border-dark-red">
+                   <div class="text-4xl font-bold dark-red-text mb-2" id="weekly-avg">186</div>
+                   <div class="text-gray-600">Weekly Average</div>
+                   <i class="fas fa-bread-slice food-icon" style="top: 10px; right: 10px;"></i>
+                   <i class="fas fa-drumstick-bite food-icon" style="bottom: 10px; left: 10px;"></i>
+               </div>
+              
+               <div class="stats-card bg-gradient-to-br from-gray-50 to-gray-100 p-6 rounded-lg shadow-lg text-center border-l-4 border-red">
+                   <div class="text-4xl font-bold red-text mb-2" id="orgs-served">12</div>
+                   <div class="text-gray-600">Organizations Served</div>
+                   <i class="fas fa-ice-cream food-icon" style="top: -5px; right: 30px;"></i>
+                   <i class="fas fa-pizza-slice food-icon" style="bottom: -5px; left: 30px;"></i>
+               </div>
+              
+               <div class="stats-card bg-gradient-to-br from-gray-50 to-gray-100 p-6 rounded-lg shadow-lg text-center border-l-4 border-maroon-light">
+                   <div class="text-4xl font-bold maroon-text mb-2" id="volunteers">47</div>
+                   <div class="text-gray-600">Student Volunteers</div>
+                   <i class="fas fa-cookie food-icon" style="top: 15px; left: 15px;"></i>
+                   <i class="fas fa-hotdog food-icon" style="bottom: 15px; right: 15px;"></i>
+               </div>
+           </div>
+          
+           <div class="bg-gradient-to-br from-gray-50 to-gray-100 p-6 rounded-lg shadow-lg border-t-4 border-maroon-dark">
+               <h3 class="text-xl font-bold maroon-text mb-4 text-center heading-font">Edit Statistics</h3>
+               <form id="stats-form" class="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
+                   <div>
+                       <label class="block text-gray-600 mb-2">Total Meals</label>
+                       <input type="number" class="w-full px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-maroon-dark" id="edit-total-meals" placeholder="Enter new total">
+                   </div>
+                   <div>
+                       <label class="block text-gray-600 mb-2">Weekly Average</label>
+                       <input type="number" class="w-full px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-dark-red" id="edit-weekly-avg" placeholder="Enter new average">
+                   </div>
+                   <div>
+                       <label class="block text-gray-600 mb-2">Organizations</label>
+                       <input type="number" class="w-full px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-red" id="edit-orgs-served" placeholder="Enter new count">
+                   </div>
+                   <div>
+                       <label class="block text-gray-600 mb-2">Volunteers</label>
+                       <input type="number" class="w-full px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-maroon-light" id="edit-volunteers" placeholder="Enter new count">
+                   </div>
+                   <div class="md:col-span-2 lg:col-span-4 flex justify-center mt-4">
+                       <button type="submit" class="px-6 py-2 dark-red-bg text-white rounded hover:bg-maroon-dark transition transform hover:scale-105">
+                           Update Statistics
+                       </button>
+                   </div>
+               </form>
+           </div>
+       </div>
+   </section>
+
+   <!-- Partner Organizations Section -->
+   <section id="partners" class="py-16 bg-gradient-to-b from-gray-100 to-gray-200">
+       <div class="container mx-auto px-4">
+           <div class="text-center mb-12">
+               <h2 class="text-3xl md:text-4xl font-bold maroon-text mb-4 heading-font">Our Partner Organizations</h2>
+               <div class="w-24 h-1 bg-gradient-to-r from-maroon-light to-maroon-dark mx-auto mb-6"></div>
+               <p class="text-lg text-gray-600 max-w-3xl mx-auto subheading-font">
+                   These are the organizations we work with to distribute food to those in need in our community.
+               </p>
+           </div>
+          
+           <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6" id="partners-container">
+               <!-- Organization Card 1 -->
+               <div class="organization-card interactive-card bg-white p-6 rounded-lg shadow-lg hover:shadow-xl transition">
+                   <div class="flex items-center mb-4">
+                       <div class="w-12 h-12 rounded-full maroon-bg flex items-center justify-center text-white mr-4">
+                           <i class="fas fa-utensils"></i>
+                       </div>
+                       <h3 class="text-xl font-bold maroon-text subheading-font">Katy Food Bank</h3>
+                   </div>
+                   <div class="mb-4">
+                       <p class="text-gray-600 mb-2">
+                           <i class="fas fa-map-marker-alt maroon-text mr-2"></i> 123 Main St, Katy, TX 77494
+                       </p>
+                       <p class="text-gray-600">
+                           <i class="fas fa-envelope maroon-text mr-2"></i> contact@katyfoodbank.org
+                       </p>
+                   </div>
+                   <p class="text-gray-600">
+                       Provides emergency food assistance to families in need throughout the Katy area.
+                   </p>
+               </div>
+              
+               <!-- Organization Card 2 -->
+               <div class="organization-card interactive-card bg-white p-6 rounded-lg shadow-lg hover:shadow-xl transition">
+                   <div class="flex items-center mb-4">
+                       <div class="w-12 h-12 rounded-full dark-red-bg flex items-center justify-center text-white mr-4">
+                           <i class="fas fa-home"></i>
+                       </div>
+                       <h3 class="text-xl font-bold dark-red-text subheading-font">Hope Shelter</h3>
+                   </div>
+                   <div class="mb-4">
+                       <p class="text-gray-600 mb-2">
+                           <i class="fas fa-map-marker-alt dark-red-text mr-2"></i> 456 Oak Ave, Katy, TX 77493
+                       </p>
+                       <p class="text-gray-600">
+                           <i class="fas fa-envelope dark-red-text mr-2"></i> info@hopeshelter.org
+                       </p>
+                   </div>
+                   <p class="text-gray-600">
+                       Offers temporary housing and meals to homeless individuals and families.
+                   </p>
+               </div>
+              
+               <!-- Organization Card 3 -->
+               <div class="organization-card interactive-card bg-white p-6 rounded-lg shadow-lg hover:shadow-xl transition">
+                   <div class="flex items-center mb-4">
+                       <div class="w-12 h-12 rounded-full red-bg flex items-center justify-center text-white mr-4">
+                           <i class="fas fa-hands-helping"></i>
+                       </div>
+                       <h3 class="text-xl font-bold red-text subheading-font">Community Kitchen</h3>
+                   </div>
+                   <div class="mb-4">
+                       <p class="text-gray-600 mb-2">
+                           <i class="fas fa-map-marker-alt red-text mr-2"></i> 789 Pine Rd, Katy, TX 77449
+                       </p>
+                       <p class="text-gray-600">
+                           <i class="fas fa-envelope red-text mr-2"></i> meals@communitykitchen.org
+                       </p>
+                   </div>
+                   <p class="text-gray-600">
+                       Serves hot meals daily to anyone in need, no questions asked.
+                   </p>
+               </div>
+              
+               <!-- Organization Card 4 -->
+               <div class="organization-card interactive-card bg-white p-6 rounded-lg shadow-lg hover:shadow-xl transition">
+                   <div class="flex items-center mb-4">
+                       <div class="w-12 h-12 rounded-full maroon-bg flex items-center justify-center text-white mr-4">
+                           <i class="fas fa-child"></i>
+                       </div>
+                       <h3 class="text-xl font-bold maroon-text subheading-font">Kids First</h3>
+                   </div>
+                   <div class="mb-4">
+                       <p class="text-gray-600 mb-2">
+                           <i class="fas fa-map-marker-alt maroon-text mr-2"></i> 321 Elm St, Katy, TX 77450
+                       </p>
+                       <p class="text-gray-600">
+                           <i class="fas fa-envelope maroon-text mr-2"></i> support@kidsfirst.org
+                       </p>
+                   </div>
+                   <p class="text-gray-600">
+                       Provides weekend meal backpacks for food-insecure children in Katy ISD.
+                   </p>
+               </div>
+              
+               <!-- Organization Card 5 -->
+               <div class="organization-card interactive-card bg-white p-6 rounded-lg shadow-lg hover:shadow-xl transition">
+                   <div class="flex items-center mb-4">
+                       <div class="w-12 h-12 rounded-full dark-red-bg flex items-center justify-center text-white mr-4">
+                           <i class="fas fa-church"></i>
+                       </div>
+                       <h3 class="text-xl font-bold dark-red-text subheading-font">St. Mary's Pantry</h3>
+                   </div>
+                   <div class="mb-4">
+                       <p class="text-gray-600 mb-2">
+                           <i class="fas fa-map-marker-alt dark-red-text mr-2"></i> 555 Faith Ln, Katy, TX 77494
+                       </p>
+                       <p class="text-gray-600">
+                           <i class="fas fa-envelope dark-red-text mr-2"></i> pantry@stmarys.org
+                       </p>
+                   </div>
+                   <p class="text-gray-600">
+                       Operates a food pantry serving hundreds of families each month.
+                   </p>
+               </div>
+              
+               <!-- Organization Card 6 -->
+               <div class="organization-card interactive-card bg-white p-6 rounded-lg shadow-lg hover:shadow-xl transition">
+                   <div class="flex items-center mb-4">
+                       <div class="w-12 h-12 rounded-full red-bg flex items-center justify-center text-white mr-4">
+                           <i class="fas fa-people-carry"></i>
+                       </div>
+                       <h3 class="text-xl font-bold red-text subheading-font">Harvest Helpers</h3>
+                   </div>
+                   <div class="mb-4">
+                       <p class="text-gray-600 mb-2">
+                           <i class="fas fa-map-marker-alt red-text mr-2"></i> 888 Harvest Way, Katy, TX 77493
+                       </p>
+                       <p class="text-gray-600">
+                           <i class="fas fa-envelope red-text mr-2"></i> help@harvesthelpers.org
+                       </p>
+                   </div>
+                   <p class="text-gray-600">
+                       Distributes fresh produce and meals to low-income families weekly.
+                   </p>
+               </div>
+              
+               <!-- Add New Partner Card -->
+               <div class="organization-card interactive-card bg-white p-6 rounded-lg shadow-lg hover:shadow-xl transition transform hover:scale-102" id="add-partner-card">
+                   <div class="flex items-center mb-4">
+                       <div class="w-12 h-12 rounded-full maroon-bg flex items-center justify-center text-white mr-4 pulse">
+                           <i class="fas fa-plus"></i>
+                       </div>
+                       <h3 class="text-xl font-bold maroon-text subheading-font">Add New Partner</h3>
+                   </div>
+                   <div class="mb-4">
+                       <p class="text-gray-600 mb-2">
+                           <i class="fas fa-map-marker-alt maroon-text mr-2"></i>
+                           <input type="text" class="w-full px-2 py-1 border rounded focus:outline-none focus:ring-1 focus:ring-maroon-dark" id="partner-address" placeholder="Address">
+                       </p>
+                       <p class="text-gray-600">
+                           <i class="fas fa-envelope maroon-text mr-2"></i>
+                           <input type="email" class="w-full px-2 py-1 border rounded focus:outline-none focus:ring-1 focus:ring-maroon-dark" id="partner-email" placeholder="Email">
+                       </p>
+                   </div>
+                   <input type="text" class="w-full px-2 py-1 border rounded mb-2 focus:outline-none focus:ring-1 focus:ring-maroon-dark" id="partner-name" placeholder="Organization Name">
+                   <textarea class="w-full px-2 py-1 border rounded mb-2 focus:outline-none focus:ring-1 focus:ring-maroon-dark" id="partner-description" placeholder="Description"></textarea>
+                   <button class="w-full py-2 dark-red-bg text-white rounded hover:bg-maroon-dark transition transform hover:scale-102" id="add-partner-btn">
+                       Add Organization
+                   </button>
+               </div>
+           </div>
+       </div>
+   </section>
+
+   <!-- About Section -->
+<section id="about" class="py-16 bg-gradient-to-b from-white to-gray-50">
+  <div class="container mx-auto px-4">
+    <!-- Header -->
+    <div class="text-center mb-12">
+      <h2 class="text-3xl md:text-4xl font-bold text-[#800000] mb-4 heading-font">About Cinco Ranch High School</h2>
+      <div class="w-24 h-1 mx-auto mb-6" style="background: linear-gradient(to right, #9b1c31, #4b0000);"></div>
+    </div>
+
+    <!-- Info Card -->
+    <div class="bg-gradient-to-br from-gray-50 to-gray-100 p-8 rounded-lg shadow-lg border-t-4" style="border-color: #4b0000;">
+      <div class="flex flex-col md:flex-row items-center">
+        <!-- President Image -->
+        <div id="president-card" class="md:w-1/3 mb-6 md:mb-0 md:mr-8 relative">
+          <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=500&fit=crop"
+               alt="Naitik, President" class="rounded-lg shadow-lg w-full" id="president-image">
+          <div class="absolute -bottom-4 -right-4 text-white px-4 py-2 rounded-full shadow-lg" style="background-color: #4b0000;">
+            President
+          </div>
+        </div>
+
+        <!-- Info Text -->
+        <div class="md:w-2/3">
+          <h3 class="text-2xl font-bold text-[#800000] mb-4 heading-font">Cinco Ranch High School Initiative</h3>
+          <p class="text-gray-600 mb-4">
+            Cinco Ranch High School has always been at the forefront of community service and innovation. Our Campus Cares program is a shining example of how students can make a real difference in their community. What started as a simple idea to reduce food waste has grown into a movement that feeds hundreds while bringing our school together.
+          </p>
+          <p class="text-gray-600 mb-4">
+            The success of this program at Cinco Ranch has been so remarkable that we're now working to expand it to other high schools in the district. Our goal is to create a network of schools working together to reduce food waste and fight hunger across our community.
+          </p>
+          <p class="text-gray-600 font-semibold">
+            - Naitik, President of Campus Cares
+          </p>
+
+          <!-- Social Buttons -->
+          <div class="mt-6 flex flex-wrap gap-4">
+            <!-- Instagram -->
+            <a href="https://www.instagram.com/nytro8382" target="_blank"
+               class="px-4 py-2 text-white rounded transition transform hover:scale-105 interactive-card"
+               style="background: linear-gradient(45deg, #feda75, #fa7e1e, #d62976, #962fbf, #4f5bd5);">
+              <i class="fab fa-instagram mr-2"></i> Instagram
+            </a>
+
+            <!-- YouTube -->
+            <a href="https://www.youtube.com/@nytronaitik7482" target="_blank"
+               class="px-4 py-2 text-white rounded transition transform hover:scale-105 interactive-card"
+               style="background-color: #FF0000;">
+              <i class="fab fa-youtube mr-2"></i> YouTube
+            </a>
+
+            <!-- Email -->
+            <a href="https://mail.google.com/mail/?view=cm&fs=1&to=naitik.s.patel10@gmail.com&su=Join%20Campus%20Cares&body=Hi%20Naitik%2C%0A%0AI%27m%20interested%20in%20joining%20Campus%20Cares.%20Please%20let%20me%20know%20how%20I%20can%20get%20involved.%0A%0AThanks!"
+               target="_blank"
+               class="px-4 py-2 text-white rounded transition transform hover:scale-105 interactive-card"
+               style="background: linear-gradient(to right, #990000, #800000);">
+              <i class="fas fa-envelope mr-2"></i> Email
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Join Us Form -->
+    <div class="mt-12 max-w-xl mx-auto bg-white p-6 rounded-lg shadow-md">
+      <h3 class="text-2xl font-bold text-[#800000] mb-4">Join Campus Cares</h3>
+      <form action="https://formspree.io/f/xdkgjjlp" method="POST">
+        <label for="name" class="block mb-2 text-gray-700 font-semibold">Your Name</label>
+        <input type="text" name="name" id="name" required
+               class="w-full p-2 mb-4 border border-gray-300 rounded">
+
+        <label for="email" class="block mb-2 text-gray-700 font-semibold">Your Email</label>
+        <input type="email" name="email" id="email" required
+               class="w-full p-2 mb-4 border border-gray-300 rounded">
+
+        <label for="message" class="block mb-2 text-gray-700 font-semibold">Message</label>
+        <textarea name="message" id="message" rows="4" required
+                  class="w-full p-2 mb-4 border border-gray-300 rounded"></textarea>
+
+        <button type="submit"
+                class="w-full px-4 py-2 text-white rounded transition transform hover:scale-105"
+                style="background-color: #990000;">
+          Send Message
+        </button>
+      </form>
+    </div>
+  </div>
+</section>
+
+
+
+          
+           <!-- Image and Text Editor -->
+           <div class="mt-8 bg-white p-6 rounded-lg shadow-lg interactive-card">
+               <h3 class="text-xl font-bold maroon-text mb-4 heading-font">Customize This Section</h3>
+               <div class="grid md:grid-cols-2 gap-6">
+                   <div>
+                       <label class="block text-gray-600 mb-2">President Image URL</label>
+                       <input type="text" class="w-full px-4 py-2 border rounded mb-4" id="president-image-url" placeholder="Enter image URL">
+                       <button class="px-4 py-2 dark-red-bg text-white rounded hover:bg-maroon-dark" id="update-president-image">
+                           Update Image
+                       </button>
+                   </div>
+                   <div>
+                       <label class="block text-gray-600 mb-2">President's Message</label>
+                       <textarea class="w-full px-4 py-2 border rounded mb-4 h-32" id="president-message">Cinco Ranch High School has always been at the forefront of community service and innovation. Our Campus Cares program is a shining example of how students can make a real difference in their community. What started as a simple idea to reduce food waste has grown into a movement that feeds hundreds while bringing our school together.
+
+
+The success of this program at Cinco Ranch has been so remarkable that we're now working to expand it to other high schools in the district. Our goal is to create a network of schools working together to reduce food waste and fight hunger across our community.</textarea>
+                       <button class="px-4 py-2 dark-red-bg text-white rounded hover:bg-maroon-dark" id="update-president-message">
+                           Update Message
+                       </button>
+                   </div>
+               </div>
+           </div>
+       </div>
+   </section>
+
+   <!-- Contact Section -->
+   <section id="contact" class="py-16 bg-gradient-to-b from-gray-100 to-gray-200">
+       <div class="container mx-auto px-4">
+           <div class="text-center mb-12">
+               <h2 class="text-3xl md:text-4xl font-bold maroon-text mb-4 heading-font">Get Involved</h2>
+               <div class="w-24 h-1 bg-gradient-to-r from-maroon-light to-maroon-dark mx-auto mb-6"></div>
+               <p class="text-lg text-gray-600 max-w-3xl mx-auto subheading-font">
+                   Join us in our mission to reduce food waste and fight hunger in our community.
+               </p>
+           </div>
+          
+           <div class="grid md:grid-cols-2 gap-8">
+               <div class="interactive-card bg-white p-8 rounded-lg shadow-lg border-t-4 border-dark-red">
+                   <h3 class="text-xl font-bold maroon-text mb-6 heading-font">Contact Us</h3>
+                   <form>
+                       <div class="mb-4">
+                           <label class="block text-gray-600 mb-2">Name</label>
+                           <input type="text" class="w-full px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-dark-red">
+                       </div>
+                       <div class="mb-4">
+                           <label class="block text-gray-600 mb-2">Email</label>
+                           <input type="email" class="w-full px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-dark-red">
+                       </div>
+                       <div class="mb-4">
+                           <label class="block text-gray-600 mb-2">Message</label>
+                           <textarea rows="4" class="w-full px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-dark-red"></textarea>
+                       </div>
+                       <button type="submit" class="px-6 py-2 dark-red-bg text-white rounded hover:bg-maroon-dark transition transform hover:scale-105">
+                           Send Message
+                       </button>
+                   </form>
+               </div>
+              
+               <div class="interactive-card bg-white p-8 rounded-lg shadow-lg border-t-4 border-red">
+                   <h3 class="text-xl font-bold maroon-text mb-6 heading-font">Volunteer Opportunities</h3>
+                   <div class="space-y-4">
+                       <div class="flex items-start hover:bg-gray-50 p-2 rounded transition">
+                           <div class="maroon-text mr-4 mt-1">
+                               <i class="fas fa-utensils"></i>
+                           </div>
+                           <div>
+                               <h4 class="font-bold maroon-text subheading-font">Food Collection Team</h4>
+                               <p class="text-gray-600">Help collect and package excess food from the cafeteria after lunch periods.</p>
+                           </div>
+                       </div>
+                      
+                       <div class="flex items-start hover:bg-gray-50 p-2 rounded transition">
+                           <div class="dark-red-text mr-4 mt-1">
+                               <i class="fas fa-car"></i>
+                           </div>
+                           <div>
+                               <h4 class="font-bold dark-red-text subheading-font">Delivery Team</h4>
+                               <p class="text-gray-600">Assist with transporting food to our partner organizations (requires parent driver).</p>
+                           </div>
+                       </div>
+                      
+                       <div class="flex items-start hover:bg-gray-50 p-2 rounded transition">
+                           <div class="red-text mr-4 mt-1">
+                               <i class="fas fa-bullhorn"></i>
+                           </div>
+                           <div>
+                               <h4 class="font-bold red-text subheading-font">Awareness Team</h4>
+                               <p class="text-gray-600">Help promote our mission through social media, posters, and school announcements.</p>
+                           </div>
+                       </div>
+                      
+                       <div class="flex items-start hover:bg-gray-50 p-2 rounded transition">
+                           <div class="maroon-text mr-4 mt-1">
+                               <i class="fas fa-calculator"></i>
+                           </div>
+                           <div>
+                               <h4 class="font-bold maroon-text subheading-font">Data Team</h4>
+                               <p class="text-gray-600">Track and analyze our food collection and distribution statistics.</p>
+                           </div>
+                       </div>
+                   </div>
+                  
+                   <div class="mt-8">
+                       <h4 class="font-bold maroon-text mb-2 subheading-font">Meeting Times</h4>
+                       <p class="text-gray-600">
+                           <i class="fas fa-calendar-alt maroon-text mr-2"></i> Every Wednesday during Cougar Time in the LGI
+                       </p>
+                   </div>
+                  
+                   <button class="mt-6 w-full py-3 dark-red-bg text-white font-bold rounded hover:bg-maroon-dark transition transform hover:scale-105 interactive-card" id="contribButton3">
+                       <i class="fas fa-user-plus mr-2"></i> Join Campus Cares Today!
+                   </button>
+               </div>
+           </div>
+       </div>
+   </section>
+
+   <!-- Footer -->
+   <footer class="bg-gradient-to-b from-maroon-dark to-maroon text-white py-8">
+       <div class="container mx-auto px-4">
+           <div class="grid md:grid-cols-4 gap-8 mb-8">
+               <div>
+                   <h3 class="text-xl font-bold mb-4 dark-red-text heading-font">Campus Cares</h3>
+                   <p class="mb-4">
+                       Turning Extra Into Enough at Cinco Ranch High School
+                   </p>
+                   <div class="flex space-x-4">
+                       <a href="#" class="text-white hover:text-light-red text-xl">
+                           <i class="fab fa-facebook"></i>
+                       </a>
+                       <a href="https://www.instagram.com/nytro8382" target="_blank" class="text-white hover:text-light-red text-xl">
+                           <i class="fab fa-instagram"></i>
+                       </a>
+                       <a href="#" class="text-white hover:text-light-red text-xl">
+                           <i class="fab fa-twitter"></i>
+                       </a>
+                       <a href="https://mail.google.com/mail/?view=cm&fs=1&to=naitik.s.patel10@gmail.com&su=Join%20Campus%20Cares&body=Hi%20Naitik%2C%0A%0AI%27m%20interested%20in%20joining%20Campus%20Cares.%20Please%20let%20me%20know%20how%20I%20can%20get%20involved.%0A%0AThanks!" class="text-white hover:text-light-red text-xl">
+                           <i class="fas fa-envelope"></i>
+                       </a>
+                   </div>
+               </div>
+              
+               <div>
+                   <h3 class="text-xl font-bold mb-4 dark-red-text heading-font">Quick Links</h3>
+                   <ul class="space-y-2">
+                       <li><a href="#home" class="hover:text-light-red transition">Home</a></li>
+                       <li><a href="#mission" class="hover:text-light-red transition">Our Mission</a></li>
+                       <li><a href="#stats" class="hover:text-light-red transition">Food Stats</a></li>
+                       <li><a href="#partners" class="hover:text-light-red transition">Partners</a></li>
+                   </ul>
+               </div>
+              
+               <div>
+                   <h3 class="text-xl font-bold mb-4 dark-red-text heading-font">Resources</h3>
+                   <ul class="space-y-2">
+                       <li><a href="#" class="hover:text-light-red transition">Volunteer Form</a></li>
+                       <li><a href="#" class="hover:text-light-red transition">Food Safety Guidelines</a></li>
+                       <li><a href="#" class="hover:text-light-red transition">Donation Receipts</a></li>
+                       <li><a href="#" class="hover:text-light-red transition">Meeting Minutes</a></li>
+                   </ul>
+               </div>
+              
+               <div>
+                   <h3 class="text-xl font-bold mb-4 dark-red-text heading-font">Contact</h3>
+                   <p class="mb-2">
+                       <i class="fas fa-school mr-2"></i> Cinco Ranch High School
+                   </p>
+                   <p class="mb-2">
+                       <i class="fas fa-map-marker-alt mr-2"></i> 23440 Cinco Ranch Blvd, Katy, TX 77494
+                   </p>
+                   <p>
+                       <i class="fas fa-envelope mr-2"></i> campuscares@cincoranchhs.edu
+                   </p>
+               </div>
+           </div>
+          
+           <div class="pt-6 border-t border-gray-700 text-center">
+               <p>
+                   &copy; 2025 Campus Cares. All Rights Reserved. <span class="dark-red-text">Making a difference one meal at a time!</span>
+               </p>
+           </div>
+       </div>
+   </footer>
+
+   <script>
+       // Mobile menu toggle
+       document.getElementById('mobile-menu-button').addEventListener('click', function() {
+           const menu = document.getElementById('mobile-menu');
+           menu.classList.toggle('hidden');
+       });
+
+       // Smooth scrolling for navigation links
+       document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+           anchor.addEventListener('click', function(e) {
+               e.preventDefault();
+              
+               const targetId = this.getAttribute('href');
+               const targetElement = document.querySelector(targetId);
+              
+               window.scrollTo({
+                   top: targetElement.offsetTop - 80,
+                   behavior: 'smooth'
+               });
+              
+               // Close mobile menu if open
+               const mobileMenu = document.getElementById('mobile-menu');
+               if (!mobileMenu.classList.contains('hidden')) {
+                   mobileMenu.classList.add('hidden');
+               }
+           });
+       });
+
+       // Statistics form submission
+       document.getElementById('stats-form').addEventListener('submit', function(e) {
+           e.preventDefault();
+          
+           // Get values from form
+           const totalMeals = document.getElementById('edit-total-meals').value;
+           const weeklyAvg = document.getElementById('edit-weekly-avg').value;
+           const orgsServed = document.getElementById('edit-orgs-served').value;
+           const volunteers = document.getElementById('edit-volunteers').value;
+          
+           // Update display values if fields aren't empty
+           if (totalMeals) {
+               document.getElementById('total-meals').textContent = totalMeals;
+               document.getElementById('edit-total-meals').value = '';
+           }
+          
+           if (weeklyAvg) {
+               document.getElementById('weekly-avg').textContent = weeklyAvg;
+               document.getElementById('edit-weekly-avg').value = '';
+           }
+          
+           if (orgsServed) {
+               document.getElementById('orgs-served').textContent = orgsServed;
+               document.getElementById('edit-orgs-served').value = '';
+           }
+          
+           if (volunteers) {
+               document.getElementById('volunteers').textContent = volunteers;
+               document.getElementById('edit-volunteers').value = '';
+           }
+          
+           // Show success message (you could add a toast notification here)
+           alert('Statistics updated successfully!');
+       });
+
+       // Contribution modal handling
+       const modal = document.getElementById('contribModal');
+       const contribButtons = [
+           document.getElementById('contribButton'),
+           document.getElementById('contribButtonMobile'),
+           document.getElementById('contribButton2'),
+           document.getElementById('contribButton3')
+       ];
+       const closeModal = document.getElementById('closeModal');
+       const confirmJoin = document.getElementById('confirmJoin');
+      
+       contribButtons.forEach(button => {
+           if (button) {
+               button.addEventListener('click', () => {
+                   modal.style.display = 'flex';
+               });
+           }
+       });
+      
+       closeModal.addEventListener('click', () => {
+           modal.style.display = 'none';
+       });
+      
+       confirmJoin.addEventListener('click', () => {
+           // Trigger confetti
+           confetti({
+               particleCount: 150,
+               spread: 70,
+               origin: { y: 0.6 },
+               colors: ['#800020', '#8B0000', '#FF0000', '#FF6B6B']
+           });
+          
+           alert('Thank you for your interest! Naitik will contact you soon.');
+           modal.style.display = 'none';
+       });
+      
+       window.addEventListener('click', (e) => {
+           if (e.target === modal) {
+               modal.style.display = 'none';
+           }
+       });
+
+       // Create floating food background
+       function createFoodBackground() {
+           const foodIcons = [
+               'fa-apple-alt', 'fa-hamburger', 'fa-pizza-slice',
+               'fa-ice-cream', 'fa-drumstick-bite', 'fa-bread-slice',
+               'fa-cookie', 'fa-hotdog', 'fa-cheese', 'fa-egg',
+               'fa-fish', 'fa-lemon', 'fa-pepper-hot', 'fa-carrot'
+           ];
+          
+           const colors = [
+               '#800020', '#8B0000', '#FF0000', '#FF6B6B'
+           ];
+          
+           const container = document.getElementById('foodBackground');
+          
+           for (let i = 0; i < 30; i++) {
+               const food = document.createElement('div');
+               food.className = `food-bg-item fas ${foodIcons[Math.floor(Math.random() * foodIcons.length)]}`;
+              
+               // Random position
+               const left = Math.random() * 100;
+               const delay = Math.random() * 15;
+               const duration = 15 + Math.random() * 15;
+               const size = 0.5 + Math.random() * 1.5;
+               const color = colors[Math.floor(Math.random() * colors.length)];
+              
+               food.style.left = `${left}%`;
+               food.style.animationDelay = `${delay}s`;
+               food.style.animationDuration = `${duration}s`;
+               food.style.fontSize = `${size}rem`;
+               food.style.color = color;
+              
+               container.appendChild(food);
+           }
+       }
+      
+       // Create floating food icons
+       function createFloatingFood() {
+           const foodIcons = [
+               'fa-apple-alt', 'fa-hamburger', 'fa-pizza-slice',
+               'fa-ice-cream', 'fa-drumstick-bite', 'fa-bread-slice',
+               'fa-cookie', 'fa-hotdog', 'fa-cheese', 'fa-egg'
+           ];
+          
+           const container = document.getElementById('floating-food');
+           const width = window.innerWidth;
+           const height = window.innerHeight;
+          
+           for (let i = 0; i < 15; i++) {
+               const icon = document.createElement('i');
+               icon.className = `fas ${foodIcons[Math.floor(Math.random() * foodIcons.length)]} food-icon`;
+              
+               // Random position
+               const left = Math.random() * width;
+               const top = Math.random() * height;
+              
+               // Random animation duration and delay
+               const duration = 5 + Math.random() * 10;
+               const delay = Math.random() * 5;
+              
+               // Random size
+               const size = 0.5 + Math.random() * 1.5;
+              
+               icon.style.left = `${left}px`;
+               icon.style.top = `${top}px`;
+               icon.style.fontSize = `${size}rem`;
+               icon.style.animation = `floating ${duration}s ease-in-out ${delay}s infinite`;
+              
+               container.appendChild(icon);
+           }
+       }
+
+       // Add new partner organization
+       document.getElementById('add-partner-btn').addEventListener('click', function() {
+           const name = document.getElementById('partner-name').value;
+           const address = document.getElementById('partner-address').value;
+           const email = document.getElementById('partner-email').value;
+           const description = document.getElementById('partner-description').value;
+           
+           if (!name || !address || !email || !description) {
+               alert('Please fill in all fields');
+               return;
+           }
+           
+           const colors = ['maroon-bg', 'dark-red-bg', 'red-bg'];
+           const color = colors[Math.floor(Math.random() * colors.length)];
+           
+           const newPartner = document.createElement('div');
+           newPartner.className = 'organization-card interactive-card bg-white p-6 rounded-lg shadow-lg hover:shadow-xl transition';
+           newPartner.innerHTML = `
+               <div class="flex items-center mb-4">
+                   <div class="w-12 h-12 rounded-full ${color} flex items-center justify-center text-white mr-4">
+                       <i class="fas fa-utensils"></i>
+                   </div>
+                   <h3 class="text-xl font-bold maroon-text subheading-font">${name}</h3>
+               </div>
+               <div class="mb-4">
+                   <p class="text-gray-600 mb-2">
+                       <i class="fas fa-map-marker-alt maroon-text mr-2"></i> ${address}
+                   </p>
+                   <p class="text-gray-600">
+                       <i class="fas fa-envelope maroon-text mr-2"></i> ${email}
+                   </p>
+               </div>
+               <p class="text-gray-600">${description}</p>
+           `;
+           
+           const partnersContainer = document.getElementById('partners-container');
+           partnersContainer.insertBefore(newPartner, document.getElementById('add-partner-card'));
+           
+           // Clear form
+           document.getElementById('partner-name').value = '';
+           document.getElementById('partner-address').value = '';
+           document.getElementById('partner-email').value = '';
+           document.getElementById('partner-description').value = '';
+           
+           // Animate the new card
+           setTimeout(() => {
+               newPartner.classList.add('animated');
+           }, 100);
+       });
+
+       // Custom cursor effect
+       const cursor = document.getElementById('cursor');
+       document.addEventListener('mousemove', (e) => {
+           cursor.style.left = e.clientX + 'px';
+           cursor.style.top = e.clientY + 'px';
+       });
+
+       // Click ripple effect
+       document.addEventListener('click', (e) => {
+           const ripple = document.createElement('div');
+           ripple.className = 'ripple';
+           ripple.style.left = e.clientX + 'px';
+           ripple.style.top = e.clientY + 'px';
+           document.body.appendChild(ripple);
+           
+           // Remove ripple after animation completes
+           setTimeout(() => {
+               ripple.remove();
+           }, 1000);
+       });
+
+       // Interactive hover effects
+       document.querySelectorAll('.interactive-card').forEach(card => {
+           card.addEventListener('mousemove', (e) => {
+               const rect = card.getBoundingClientRect();
+               const x = e.clientX - rect.left;
+               const y = e.clientY - rect.top;
+               const centerX = rect.width / 2;
+               const centerY = rect.height / 2;
+               const angleY = (x - centerX) / 20;
+               const angleX = (centerY - y) / 20;
+               
+               card.style.transform = `perspective(1000px) rotateX(${angleX}deg) rotateY(${angleY}deg)`;
+           });
+           
+           card.addEventListener('mouseleave', () => {
+               card.style.transform = 'perspective(1000px) rotateX(0) rotateY(0)';
+           });
+       });
+
+       // Update president image
+       document.getElementById('update-president-image').addEventListener('click', function() {
+           const url = document.getElementById('president-image-url').value;
+           if (url) {
+               document.getElementById('president-image').src = url;
+               document.getElementById('president-image-url').value = '';
+               alert('President image updated!');
+           }
+       });
+      
+       // Update president message
+       document.getElementById('update-president-message').addEventListener('click', function() {
+           const message = document.getElementById('president-message').value;
+           const paragraphs = message.split('\n\n');
+          
+           const aboutSection = document.querySelector('#about .md:w-2/3');
+           if (aboutSection && paragraphs.length >= 2) {
+               aboutSection.querySelector('p:nth-of-type(1)').textContent = paragraphs[0];
+               aboutSection.querySelector('p:nth-of-type(2)').textContent = paragraphs[1];
+               alert('President message updated!');
+           }
+       });
+
+       // Random confetti bursts
+       function randomConfetti() {
+           const colors = ['#800020', '#8B0000', '#FF0000', '#FF6B6B'];
+          
+           setTimeout(() => {
+               confetti({
+                   particleCount: 100,
+                   angle: Math.random() * 180,
+                   spread: 70,
+                   origin: {
+                       x: Math.random(),
+                       y: Math.random() * 0.5 + 0.2
+                   },
+                   colors: colors
+               });
+              
+               randomConfetti();
+           }, Math.random() * 10000 + 10000); // Between 10-20 seconds
+       }
+      
+       // Show "Go Cougars!" popup
+       function showCougarPopup() {
+           const popup = document.getElementById('cougarPopup');
+           popup.classList.add('show');
+           
+           setTimeout(() => {
+               popup.classList.remove('show');
+               setTimeout(showCougarPopup, 30000); // Show again after 30 seconds
+           }, 5000); // Hide after 5 seconds
+       }
+      
+       // Set initial state for animated elements
+       window.addEventListener('load', () => {
+           createFoodBackground();
+           createFloatingFood();
+           animateOnScroll();
+           randomConfetti();
+           setTimeout(showCougarPopup, 5000); // Show popup after 5 seconds
+       });
+      
+       window.addEventListener('scroll', animateOnScroll);
+      
+       // Animate elements on scroll
+       function animateOnScroll() {
+           document.querySelectorAll('.stats-card, .organization-card, #president-card').forEach(el => {
+               const rect = el.getBoundingClientRect();
+               if (rect.top < window.innerHeight - 100) {
+                   el.classList.add('animated');
+               }
+           });
+       }
+   </script>
+</body>
+</html>
+
+
+
